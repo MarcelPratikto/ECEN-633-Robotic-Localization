@@ -169,6 +169,24 @@ def evaluate_pmf(experiment_initializer, random_variable, dice_sides=6):
     ###################################
     # Finish this implementation here
 
+    # stores the probabilities of outcomes based on the experiment
+    outcomes = experiment.enumerate_outcomes()
+
+    # keep track of the total probability, MUST SUM TO ONE!
+    total_prob = 0
+    
+    for outcome in outcomes:
+        if (outcome[1] < 0):
+            raise ValueError("evaluate_pmf: Outcomes with negative probabilities received.")
+        value = random_variable(outcome[0])
+        if value not in p_x.keys():
+            p_x[value] = outcome[1]
+        else:
+            p_x[value] += outcome[1]
+        total_prob += outcome[1]
+
+    if not np.isclose(total_prob, 1.0):
+        raise ValueError("evaluate_pmf: Probabilities do not sum to one.")
     ###################################
     return p_x
 
@@ -199,7 +217,7 @@ def expected_value(rv_pmf):
 
     """
     if not rv_pmf:
-        raise ValueError("Empty pmf.")
+        raise ValueError("expected_value: Empty pmf.")
 
     pmf = {}
     if(isinstance(rv_pmf, dpc.ProbabilityMassFunction)):
@@ -211,7 +229,15 @@ def expected_value(rv_pmf):
 
     ##################################
     # Finish Implementation Here
+    # Expected value is sum of each value multiplied by its corresponding probability
+     
+    if not np.isclose(sum(pmf.values()), 1.0):
+        raise ValueError("expected_value: Probabilities do not sum to one.")
 
+    for value in pmf:
+        if pmf[value] < 0:
+            raise ValueError("expected_value: Outcomes with negative probabilities received.")
+        e_value += (value * pmf[value])
     #################################
 
     return e_value
@@ -253,6 +279,31 @@ def variance(rv_pmf):
 
     ###################################
     # Finish Implementation Here
+    # Variance is the average squared devation from the mean
+    # E[(x-E[x])^2]
+
+    if not pmf:
+        raise ValueError("variance: Empty pmf.")
+
+    if not np.isclose(sum(pmf.values()), 1.0):
+        raise ValueError("variance: Probabilities do not sum to one.")
+
+    exp_val = expected_value(pmf)
+    dev = {}
+    dev_total = 0
+    for val in pmf:
+        if pmf[val] < 0:
+            raise ValueError("variance: Outcomes with negative probabilities received.")
+        
+        temp = pow(val-exp_val,2)
+        if temp not in dev.keys():
+            dev[temp] = pmf[val]
+        else:
+            dev[temp] += pmf[val]
+
+    # print(f"     DEBUG dev: {dev}")
+    # print(f"     DEBUG sum of dev.values(): {sum(dev.values())}")
+    var = expected_value(dev)
 
     ###################################
 

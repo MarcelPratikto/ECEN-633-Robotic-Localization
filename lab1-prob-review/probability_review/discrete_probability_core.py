@@ -90,8 +90,8 @@ class ProbabilityMassFunction():
         fig, ax = plt.subplots()
 
         plt.stem(self.probabilities.keys(),
-                 self.probabilities.values(),
-                 use_line_collection=True)
+                 self.probabilities.values())
+                 #use_line_collection=True)
 
         ax.set_ylim([0, 1])
         left, right = ax.get_xlim()
