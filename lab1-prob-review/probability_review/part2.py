@@ -91,8 +91,39 @@ def evaluate_joint_pmf(experiment_initializer, random_var1, random_var2, dice_si
 
     ###################################
     # Finish this implementation here
+    outcomes = experiment.enumerate_outcomes()
+    # print(f"DEBUG outcomes: {outcomes}")
 
+    total_exp = 0
+    total_prob = 0.0
 
+    for outcome in outcomes:
+        # print(f"DEBUG outcome: {outcome}")
+        # print(f"DEBUG random_var1: {random_var1(outcome[0])}")
+        # print(f"DEBUG random_var2: {random_var2(outcome[0])}")
+
+        if outcome[1] < 0.0:
+            raise ValueError("evaluate_joint_pmf: Outcomes with negative probabilities received.")
+
+        var1 = random_var1(outcome[0])
+        var2 = random_var2(outcome[0])
+
+        if var1 not in values_var1:
+            values_var1.append(var1)
+        if var2 not in values_var2:
+            values_var2.append(var2)
+
+        key = (var1, var2)
+        if key not in probabilities.keys():
+            probabilities[key] = outcome[1]
+        else:
+            probabilities[key] += outcome[1]
+
+    print(f"DEBUG probabilities: {probabilities}")
+    print(f"DEBUG sum(probabilities.values()): {sum(probabilities.values())}")
+
+    if not np.isclose(sum(probabilities.values()), 1.0):
+        raise ValueError("evaluate_joint_pmf: Probabilities do not sum to one.")
     ###################################
     return values_var1, values_var2, probabilities
 
