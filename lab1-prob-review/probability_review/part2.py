@@ -211,20 +211,11 @@ def covariance(joint_pmf):
 
     sigma = np.zeros([2,2])
 
-    pmf = {(2, 3.5): 0.0625, (3, 6.0): 0.0625,
-               (4, 8.5): 0.0625, (5, 11.0): 0.0625,
-               (3, 4.5): 0.0625, (4, 7.0): 0.0625,
-               (5, 9.5): 0.0625, (6, 12.0): 0.0625,
-               (4, 5.5): 0.0625, (5, 8.0): 0.0625,
-               (6, 10.5): 0.0625, (7, 13.0): 0.0625,
-               (5, 6.5): 0.0625, (6, 9.0): 0.0625,
-               (7, 11.5): 0.0625, (8, 14.0): 0.0625}
-
     ###################################
     # Finish Implementation Here
     # sigma should be of the form: [[COVxx, COVxy][COVyx, COVyy]]
-    # COVxx, COVyy: variances of the individual random variables
-    # COVxy, COVyx: covariances, or how "correlated".
+    # COVxx, COVyy: auto covariance of the individual random variables
+    # COVxy, COVyx: cross covariance, or how "correlated".
         # > 0 : if one goes up, the other goes up
         # 0 : uncorrelated
 
