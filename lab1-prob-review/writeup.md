@@ -1,6 +1,7 @@
 # Prob Review Lab Write-up
 ## Marcel Pratikto
 
+---
 
 ## Part 1
 
@@ -30,3 +31,42 @@ test/test_part1.py::TestFunctionVariance::test_correct_for_two_dice_diff PASSED 
         * 10: 4+6, 5+5
         * 7: 1+6, 2+5, 3+4
 
+---
+
+## Part 2
+
+### Output of test_part2.py
+
+
+### 2.2.3 Wrap Up
+For each pair of jointly distributed random variables, are the two variables correlated with one another? How do you know? Does this make sense?
+
+* 
+
+---
+
+## Part 3
+### Output of test_part3.py
+```python
+test/test_part3.py::TestFunctionMarginalizeOut::test_throws_when_invalid_indicator_passed_in PASSED                                                                                 [ 12%] 
+test/test_part3.py::TestFunctionMarginalizeOut::test_throws_when_invalid_joint_pmf_received PASSED                                                                                  [ 25%] 
+test/test_part3.py::TestFunctionMarginalizeOut::test_correct_for_marginalize_out_difference_from_sum_and_difference PASSED                                                          [ 37%] 
+test/test_part3.py::TestFunctionMarginalizeOut::test_correct_for_marginalize_out_sum_from_sum_and_difference PASSED                                                                 [ 50%] 
+test/test_part3.py::TestFunctionConditionAgainst::test_throws_when_invalid_indicator_passed_in PASSED                                                                               [ 62%] 
+test/test_part3.py::TestFunctionConditionAgainst::test_throws_when_invalid_joint_pmf_received PASSED                                                                                [ 75%] 
+test/test_part3.py::TestFunctionConditionAgainst::test_correct_for_condition_against_difference_from_sum_and_difference PASSED                                                      [ 87%] 
+test/test_part3.py::TestFunctionConditionAgainst::test_correct_for_condition_against_sum_from_sum_and_difference PASSED                                                             [100%] 
+```
+
+### 3.2.1 Wrap Up
+
+Do the marginal PMFs match the PMFs you generated in part 1?
+* Yes
+![Marginal PMF comparison screenshot](/lab1-prob-review/marginal-pmf-screenshot.jpg)
+
+Please describe the output of the conditional PMFs. Why does the output make sense?
+* The output of the conditional PMFs are the probability of the unknown variable being a certain value, given that the known value equal something. The output makes better sense when we look at a picture of it.
+
+![Prob of x given Y = 2](/lab1-prob-review/given_y_2.png)
+
+* This is saying that if Y=2 in the joint PMF, then the chances of x being 4, 6, 8, or 10 are equal.

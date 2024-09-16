@@ -211,6 +211,15 @@ def covariance(joint_pmf):
 
     sigma = np.zeros([2,2])
 
+    pmf = {(2, 3.5): 0.0625, (3, 6.0): 0.0625,
+               (4, 8.5): 0.0625, (5, 11.0): 0.0625,
+               (3, 4.5): 0.0625, (4, 7.0): 0.0625,
+               (5, 9.5): 0.0625, (6, 12.0): 0.0625,
+               (4, 5.5): 0.0625, (5, 8.0): 0.0625,
+               (6, 10.5): 0.0625, (7, 13.0): 0.0625,
+               (5, 6.5): 0.0625, (6, 9.0): 0.0625,
+               (7, 11.5): 0.0625, (8, 14.0): 0.0625}
+
     ###################################
     # Finish Implementation Here
     # sigma should be of the form: [[COVxx, COVxy][COVyx, COVyy]]
@@ -225,67 +234,22 @@ def covariance(joint_pmf):
     if not np.isclose(sum(pmf.values()), 1.0):
         raise ValueError("covariance: Probabilities do not sum to one.")
 
+    # print(f"DEBUG pmf\n: {pmf}")
     exp_val = expected_value(pmf)
     exp_x = exp_val[0]
     exp_y = exp_val[1]
 
-    def expected_value_single(temp_pmf):
-        e_value = 0.0
-        for value in temp_pmf:
-            e_value += (value * temp_pmf[value])
-        return e_value
-    
-    # def variance_single(temp_pmf, temp_exp_val):
-    #     dev = {} # squared deviations
-    #     for key in temp_pmf:
-    #         if temp_pmf[key] < 0:
-    #             raise ValueError("variance_single: Outcomes with negative probabilities received.")
-    #         # deviation^2
-    #         temp = pow(key-temp_exp_val,2)
-    #         # If squared deviation is not in the key of the dictionary,
-    #         # create a new key and assign it the pmf probability
-    #         # otherwise, add the pmf probability to that key's value.
-    #         if temp not in dev.keys():
-    #             dev[temp] = temp_pmf[key]
-    #         else:
-    #             dev[temp] += temp_pmf[key]
-    #     return expected_value_single(dev)
-
-    marginal_x = {}
-    marginal_y = {}
-    exp_xy = 0.0
     for key in pmf:
         if pmf[key] < 0.0:
             raise ValueError("covariance: Outcomes with negative probabilities received.")
-        exp_xy += key[0]*pmf[key]*key[1]
+        
+        x = key[0]
+        y = key[1]
 
-        x_2 = pow(key[0], 2)
-        if x_2 not in marginal_x.keys():
-            marginal_x[x_2] = pmf[key]
-        else:
-            marginal_x[x_2] += pmf[key]
-
-        y_2 = pow(key[1], 2)
-        if y_2 not in marginal_y.keys():
-            marginal_y[y_2] = pmf[key]
-        else:
-            marginal_y[y_2] += pmf[key]
-
-    # COV[X,Y] = E[XY] - E[X]E[Y]
-    cov_xy = exp_xy - (exp_x * exp_y)
-
-    # COV[X,X] = E[X^2] - E[X]^2
-    exp_x_2 = expected_value_single(marginal_x)
-    print(f"DEBUG exp_x_2: {exp_x_2}")
-    cov_xx = exp_x_2 - pow(exp_x, 2)
-
-    # COV[Y,Y] = E[Y^2] - E[Y]^2
-    exp_y_2 = expected_value_single(marginal_y)
-    print(f"DEBUG exp_y_2: {exp_y_2}")
-    cov_yy = exp_y_2 - pow(exp_y, 2)
-
-    sigma = [[cov_xx, cov_xy],[cov_xy, cov_yy]]
-
+        sigma[0][0] += pow(x-exp_x,2)*pmf[key]
+        sigma[0][1] += (x-exp_x)*(y-exp_y)*pmf[key]
+        sigma[1][0] += (x-exp_x)*(y-exp_y)*pmf[key]
+        sigma[1][1] += pow(y-exp_y,2)*pmf[key]
     ###################################
 
     return sigma

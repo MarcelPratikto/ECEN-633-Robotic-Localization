@@ -72,11 +72,11 @@ def marginalize_out(joint_pmf, variable_to_marginalize):
     """
     if(not (variable_to_marginalize == 1 or
             variable_to_marginalize == 2)):
-        msg = "Invalid variable_to_marginalize indicator (must be 1 or 2)."
+        msg = "marginalize_out: Invalid variable_to_marginalize indicator (must be 1 or 2)."
         raise ValueError(msg)
 
     if(not isinstance(joint_pmf, dpc.JointProbabilityMassFunction)):
-        raise ValueError("Invalid joint PMF received.")
+        raise ValueError("marginalize_out: Invalid joint PMF received.")
 
     var1_values = joint_pmf.values_var1
     var2_values = joint_pmf.values_var2
@@ -86,6 +86,22 @@ def marginalize_out(joint_pmf, variable_to_marginalize):
     
     ###################################
     # Finish this implementation here
+    # print(f"DEBUG pmf: {pmf}")
+    # print(f"DEBUG var1_values: {var1_values}")
+    # print(f"DEBUG var2_values: {var2_values}")
+
+    if variable_to_marginalize == 2:
+        var = 0
+    else:
+        var = 1
+
+    for key in pmf:
+        if key[var] not in marginalized_pmf_dic:
+            marginalized_pmf_dic[key[var]] = pmf[key]
+        else:
+            marginalized_pmf_dic[key[var]] += pmf[key]
+    
+    # print(f"DEBUG marginalized_pmf_dic: {marginalized_pmf_dic}")
 
     ###################################
     marginalized_pmf = dpc.ProbabilityMassFunction(marginalized_pmf_dic)
@@ -128,22 +144,52 @@ def condition_against(joint_pmf, known_random_variable):
     """
     if(not (known_random_variable == 1 or
             known_random_variable == 2)):
-        msg = "Invalid known_random_variable indicator (must be 1 or 2)."
+        msg = "condition_against: Invalid known_random_variable indicator (must be 1 or 2)."
         raise ValueError(msg)
 
     if(not isinstance(joint_pmf, dpc.JointProbabilityMassFunction)):
-        raise ValueError("Invalid joint PMF received.")
+        raise ValueError("condition_against: Invalid joint PMF received.")
 
     var1_values = joint_pmf.values_var1
     var2_values = joint_pmf.values_var2
     pmf = joint_pmf.probabilities
 
-    
-    conditional_pmf = {}
+    conditional_pmf = {} #{known: {unknown: probability}}
     
     ###################################
     # Finish this implementation here
+    if known_random_variable == 2:
+        var_values = var2_values
+    else:
+        var_values = var1_values
 
+    temp_cond = {}
+    
+    for value in var_values:
+        
+        temp_cond = {}
+        for key in pmf:
+            x = key[0]
+            y = key[1]
+            
+            if known_random_variable == 2:
+                if y == value:
+                    if x not in temp_cond.keys():
+                        temp_cond[x] = pmf[key]
+                    else:
+                        temp_cond[x] += pmf[key]
+            else:
+                if x == value:
+                    if y not in temp_cond.keys():
+                        temp_cond[y] = pmf[key]
+                    else:
+                        temp_cond[y] += pmf[key]
+        
+        total_prob = sum(temp_cond.values())
+        for key in temp_cond:
+            temp_cond[key] = temp_cond[key] / total_prob
+        
+        conditional_pmf[value] = dpc.ProbabilityMassFunction(temp_cond) 
 
     ###################################
     return conditional_pmf
