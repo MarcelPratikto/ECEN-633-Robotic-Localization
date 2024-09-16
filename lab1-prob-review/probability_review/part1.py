@@ -289,22 +289,23 @@ def variance(rv_pmf):
         raise ValueError("variance: Probabilities do not sum to one.")
 
     exp_val = expected_value(pmf)
-    dev = {}
-    dev_total = 0
+    dev = {} # squared deviations
+
     for val in pmf:
         if pmf[val] < 0:
             raise ValueError("variance: Outcomes with negative probabilities received.")
         
+        # deviation^2
         temp = pow(val-exp_val,2)
+        # If squared deviation is not in the key of the dictionary,
+        # create a new key and assign it the pmf probability
+        # otherwise, add the pmf probability to that key's value.
         if temp not in dev.keys():
             dev[temp] = pmf[val]
         else:
             dev[temp] += pmf[val]
 
-    # print(f"     DEBUG dev: {dev}")
-    # print(f"     DEBUG sum of dev.values(): {sum(dev.values())}")
     var = expected_value(dev)
-
     ###################################
 
     return var
